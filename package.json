@@ -1,0 +1,31 @@
+{
+  "name": "ecomexpress",
+  "version": "1.0.0",
+  "description": "Sample E-commerce website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjprateekjoshi/eComExpress.git"
+  },
+  "keywords": [
+    "E-commerce",
+    "e-commerce",
+    "shop",
+    "shopping"
+  ],
+  "author": "Prateek Joshi",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/pjprateekjoshi/eComExpress/issues"
+  },
+  "homepage": "https://github.com/pjprateekjoshi/eComExpress#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "nodemon": "^1.18.3"
+  }
+}
