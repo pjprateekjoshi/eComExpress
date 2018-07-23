@@ -1,5 +1,7 @@
 var bodyParser = require("body-parser");
 
+var Product = require("./../App/modules/Product.js");
+
 const home = function(req,res){
     res.render("./../resources/views/index.ejs");
 }

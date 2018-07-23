@@ -1,4 +1,5 @@
 var mongoose = require ("mongoose");
+mongoose.connect("mongodb://localhost/ecom-test");
 
 var productSchema = new mongoose.Schema({
     id: String,
