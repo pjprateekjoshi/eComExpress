@@ -20,7 +20,15 @@ const cart = function(req,res){
 }
 
 const productDetails = function(req,res){
-    res.render("./../resources/views/product-details.ejs");
+    var id = req.params.id;
+    Product.findOne({"id":id}, function(err,product){
+        if(err){
+            console.log(err);
+            res.send("Error! Check log.");
+        }else{
+            res.render("./../resources/views/product-details.ejs", {product:product});
+        }
+    });
 }
 
 const shop = function(req,res){
@@ -43,6 +51,7 @@ const addProduct = function(req,res){
         shortDesc: req.body.shortDesc,
         longDesc: req.body.longDesc,
         image: req.body.image,
+        category: req.body.category,
         price: req.body.price,
         brand: req.body.brand,
         availableQuantity: req.body.availableQuantity
