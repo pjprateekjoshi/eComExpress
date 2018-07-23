@@ -9,7 +9,7 @@ var productSchema = new mongoose.Schema({
     image: String,
     price: Number,
     brand: String,
-    quantity: Number
+    availableQuantity: Number
 });
 
 var Product = mongoose.model("Product", productSchema);

@@ -10,4 +10,7 @@ router.get('/cart', (req,res)=>{homeController.cart(req,res);});
 router.get('/product-details', (req,res)=>{homeController.productDetails(req,res);});
 router.get('/shop', (req,res)=>{homeController.shop(req,res);});
 
+router.get('/add-product', (req,res)=>{homeController.addProductForm(req,res);});
+router.post('/add-product', (req,res)=>{homeController.addProduct(req,res);});
+
 module.exports = router;
