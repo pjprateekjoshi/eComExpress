@@ -1,5 +1,17 @@
 var Product = require("./../App/modules/Product.js");
 
+Product = Product.Product;
+
+/*
+Create a function that set temp user cookie only if it is not set.
+cookie format: {
+    loggedIn : boolean,
+    user     : string, //(username if loggedIn is true, and random, unique for each browser if loggedIn is false)
+                        //temp-user table must be having an _id field which can be used as unique user cookie for each browser.
+                        //I must learn how to delete mongodb row(document) automatically after some definite time.
+}
+*/
+
 const home = function(req,res){
     Product.find({}, function(err,products){
         if(err){
@@ -35,6 +47,24 @@ const shop = function(req,res){
     res.render("./../resources/views/shop.ejs");
 }
 
+const cartAdd = function(req,res){
+    var productID = req.body.id;
+    var productQty = req.body.quantity;
+    Product.findOne({"id":id},function(err,product){
+        if(err){
+            console.log(err);
+        }else{
+            //  get username from cookies(set 2 types of cookies, logged in and logged out.)
+            //  (Logged out must have unique temp username corresponding to temp-user table.)
+            //  get cart _id findOne({_id},function(err,cart){  });
+            //  push product object to that cart
+            //  
+            //  make ejs display from the user's cart...
+
+            res.render("./../resources/views/cart.ejs");
+        }
+    });
+}
 
 /* ========================
         ADD PRODUCT BEGIN

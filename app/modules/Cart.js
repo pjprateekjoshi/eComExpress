@@ -1,12 +1,12 @@
 var mongoose = require ("mongoose");
 mongoose.connect("mongodb://localhost/ecom-test");
-var Product = require ("./Cart.js");
+var Product = require ("./Product.js");
 
 var cartSchema = new mongoose.Schema({
    username : String,
    cartContents: [Product.productSchema]
 });
 
-var Product = mongoose.model("Cart", cartSchema);
+var Cart = mongoose.model("Cart", cartSchema);
 
-module.exports = Product;
+module.exports = Cart;
