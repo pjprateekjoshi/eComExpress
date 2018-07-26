@@ -9,17 +9,17 @@
         <div class="products-catagories-area clearfix">
             <div class="amado-pro-catagory clearfix">
 
-                <%for(i=0;i<products.length;i++){%>
+                <%for(i=0;i<categories.length;i++){%>
                 <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
-                    <a href="/product-details/<%=products[i].id%>">
-                        <img src="img/<%=products[i].image%>" alt="">
+                    <a href="/shop/<%=categories[i]._id%>">
+                        <img src="img/category-img/<%=categories[i].image%>" alt="">
                         <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
-                            <p>From $<%=products[i].price%></p>
-                            <h4><%=products[i].name%></h4>
-                            <p><%=products[i].shortDesc%></p>
+                            <p>From $<%=categories[i].price%></p>
+                            <h4><%=categories[i].name%></h4>
+                            <p><%=categories[i].shortDesc%></p>
                         </div>
                     </a>
                 </div>

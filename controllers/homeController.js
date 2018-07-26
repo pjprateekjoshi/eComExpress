@@ -1,6 +1,8 @@
 var Product = require("./../App/modules/Product.js");
+var Category = require("./../App/modules/Category.js");
 
 Product = Product.Product;
+
 
 /*
 Create a function that set temp user cookie only if it is not set.
@@ -13,12 +15,12 @@ cookie format: {
 */
 
 const home = function(req,res){
-    Product.find({}, function(err,products){
+    Category.find({}, function(err,categories){
         if(err){
             console.log(err);
             res.send("Error! Check log.");
         }else{
-            res.render("./../resources/views/index.ejs",{products:products});
+            res.render("./../resources/views/index.ejs",{categories:categories});
         }
     });
 }
@@ -44,7 +46,31 @@ const productDetails = function(req,res){
 }
 
 const shop = function(req,res){
-    res.render("./../resources/views/shop.ejs");
+    var categoryID = req.params.category;
+    Category.find({}, function(err,categories){
+        if(err){
+            console.log(err);
+            res.send("Error! Check log.");
+        }else{
+            Category.findById(categoryID, function(err,category){
+                if(err){
+                    console.log(err);
+                    res.send(err);
+                }else{
+                    console.log(category);
+                    Product.find({"category":category.name}, function(err,products){
+                        if(err){
+                            console.log(err);
+                            res.send(err);
+                        }else{
+                            res.render("./../resources/views/shop.ejs", {products:products, categories:categories});
+                        }
+                    });
+                    
+                }
+            });
+        }
+    });
 }
 
 const cartAdd = function(req,res){
@@ -81,6 +107,10 @@ const addProduct = function(req,res){
         shortDesc: req.body.shortDesc,
         longDesc: req.body.longDesc,
         image: req.body.image,
+        imageLarge1: req.body.imagelarge1,
+        imageLarge2: req.body.imagelarge2,
+        imageLarge3: req.body.imagelarge3,
+        imageLarge4: req.body.imagelarge4,
         category: req.body.category,
         price: req.body.price,
         brand: req.body.brand,
@@ -94,6 +124,12 @@ const addProduct = function(req,res){
         }else{
             console.log("Product added!");
             res.send("Product added!\n"+ addedProduct);
+            
+            Category.findOne({"name":req.body.category}, function(err,category){
+
+            category.productList.push(addedProduct);
+    });
+
         }
     });
 }
@@ -102,6 +138,26 @@ const addProduct = function(req,res){
         ADD PRODUCT END
 ========================= */
 
+/* ========================
+        ADD CATEGORY START
+========================= */
+    const addCategoryForm = function(req,res){
+        res.render("./../resources/views/add-category.ejs");
+    }
+
+    const addCategory = function(req,res){
+        var newCategory = new Category({
+            name: req.body.name,
+            image: req.body.image
+        });
+        newCategory.save(function(err, addedCategory){
+            console.log("Category added!");
+            res.send("Category added!\n" + addedCategory);
+        });
+    }
+/* ========================
+        ADD CATEGORY END
+========================= */
 
 module.exports = {
     home,
@@ -110,5 +166,7 @@ module.exports = {
     productDetails,
     shop,
     addProductForm,
-    addProduct
+    addProduct,
+    addCategoryForm,
+    addCategory
 }
