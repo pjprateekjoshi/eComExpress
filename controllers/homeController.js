@@ -1,9 +1,34 @@
+var cook
+
 var Product = require("./../App/modules/Product.js");
 var Category = require("./../App/modules/Category.js");
+var TempUser = require("./../App/modules/TempUser.js");
+
 
 Product = Product.Product;
 
+const checkCookie = function (req,res){
+    var readCookie = req.cookies;
+    if(readCookie.temp === undefined){
+        return(false);
+    }else{
+        return(true);
+    }
+}
 
+// const setTempCookie = function(req,res,function callback ()){
+//     newTempUser = new TempUser({reference: i});
+
+//     newTempUser.save(function(err,addedNewTempUser){
+//         if(err){
+//             console.log(err);
+//             res.render(err);
+//         }else{
+//             res.cookie('temp',{"reference":i++,"loggedIn":false, "user":addedNewTempUser._id});
+//         }
+//     });
+
+// }
 /*
 Create a function that set temp user cookie only if it is not set.
 cookie format: {
@@ -14,13 +39,29 @@ cookie format: {
 }
 */
 
+
 const home = function(req,res){
     Category.find({}, function(err,categories){
         if(err){
             console.log(err);
             res.send("Error! Check log.");
         }else{
-            res.render("./../resources/views/index.ejs",{categories:categories});
+            if(!checkCookie(req,res)){
+                i = Math.random();
+                newTempUser = new TempUser({reference: i});
+                newTempUser.save(function(err,addedNewTempUser){
+                    if(err){
+                        console.log(err);
+                        res.render(err);
+                    }else{
+                        res.cookie('temp',{"reference":i,"loggedIn":false, "user":addedNewTempUser._id})
+                        res.render("./../resources/views/index.ejs",{categories:categories});
+                    }
+                });
+            }else{
+                res.render("./../resources/views/index.ejs",{categories:categories});
+            }
+        
         }
     });
 }

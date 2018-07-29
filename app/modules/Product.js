@@ -1,5 +1,7 @@
 var mongoose = require ("mongoose");
-mongoose.connect("mongodb://localhost/ecom-test");
+
+mongoose.connect("mongodb://localhost:27017/ecom-test", {useNewUrlParser:true});
+  
 
 var productSchema = new mongoose.Schema({
     id: String,
