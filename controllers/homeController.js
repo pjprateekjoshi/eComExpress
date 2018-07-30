@@ -98,7 +98,6 @@ const shop = function(req,res){
                     console.log(err);
                     res.send(err);
                 }else{
-                    console.log(category);
                     Product.find({"category":category.name}, function(err,products){
                         if(err){
                             console.log(err);
