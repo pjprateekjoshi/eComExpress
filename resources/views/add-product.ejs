@@ -29,7 +29,12 @@
         <br><br><br><br>
 
         <label>Category:</label><br>
-        <input type="text" name="category">
+        <select name="category">
+        <%for(i=0;i<categories.length;i++){%>
+            <option value="<%=categories[i].name%>"><%=categories[i].name%></option>
+        <%}%>
+        </select>
+        <a href="add-category">Add New</a>
         <br><br>
         <label>Price:</label><br>
         <input type="text" name="price">

@@ -110,7 +110,6 @@ const shop = function(req,res){
                                 res.render("./../resources/views/shop.ejs", {products:products, categories:categories});
                             }
                         });
-                        
                     }
                 });
             }
@@ -144,7 +143,9 @@ const cartAdd = function(req,res){
 ========================= */
 
 const addProductForm = function(req,res){
-    res.render("./../resources/views/add-product.ejs");
+    Category.find({}, function(err,categories){
+        res.render("./../resources/views/add-product.ejs", {categories:categories});
+    });
 }
 
 const addProduct = function(req,res){
