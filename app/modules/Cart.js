@@ -4,7 +4,10 @@ var Product = require ("./Product.js");
 
 var cartSchema = new mongoose.Schema({
    username : String,
-   cartContents: [Product.productSchema]
+   cartContents: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product"
+}]
 });
 
 var Cart = mongoose.model("Cart", cartSchema);

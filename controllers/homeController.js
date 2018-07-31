@@ -76,7 +76,16 @@ const checkout = function(req,res){
 
 const cart = function(req,res){
     setTempCookie(req,res,function(){
-        res.render("./../resources/views/cart.ejs");
+        var tempUserID = req.cookies.temp.user;
+        TempUser.findById(tempUserID).populate("cartID")
+        .exec(function(err,theTempUser){
+            tempCartContents = theTempUser.cartID.populate("tempCartContents");
+            console.log(theTempUser);
+            console.log("*******************\n",tempCartContents,"\n****************\n");
+           res.render("./../resources/views/cart.ejs",
+        //    {tempCartContents:tempCartContents}
+        );
+        });
     });
 }
 
@@ -119,12 +128,22 @@ const shop = function(req,res){
 
 const cartAdd = function(req,res){
     setTempCookie(req,res,function(){
+
+
         var productID = req.body.id;
-        var productQty = req.body.quantity;
-        Product.findOne({"id":id},function(err,product){
-            if(err){
-                console.log(err);
-            }else{
+        console.log(req.body);
+        // var productQty = req.body.quantity;
+        var tempUserID = req.cookies.temp.user
+        TempUser.findById(tempUserID).populate("cartID")
+        .exec(function(err,theTempUser){
+                theTempUser.cartID.tempCartContents.push(productID);
+                theTempUser.cartID.save();
+                res.redirect("/cart");
+        });
+        // Product.findById(productID,function(err,product){
+        //     if(err){
+        //         console.log(err);
+        //     }else{
                 //  get username from cookies(set 2 types of cookies, logged in and logged out.)
                 //  (Logged out must have unique temp username corresponding to temp-user table.)
                 //  get cart _id findOne({_id},function(err,cart){  });
@@ -132,9 +151,12 @@ const cartAdd = function(req,res){
                 //  
                 //  make ejs display from the user's cart...
 
-                res.render("./../resources/views/cart.ejs");
-            }
-        });
+
+            //     res.render("./../resources/views/cart.ejs");
+            // }
+        // });
+   
+
     });
 }
 
@@ -218,5 +240,6 @@ module.exports = {
     addProductForm,
     addProduct,
     addCategoryForm,
-    addCategory
+    addCategory,
+    cartAdd
 }

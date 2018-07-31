@@ -97,7 +97,12 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div> -->
                                     <div class="cart">
-                                        <a href="cart" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="img/core-img/cart.png" alt=""></a>
+                                        <form action="/cart" method="POST">
+                                            <input type="hidden" value="<%=category.productList[i]._id%>" name="id">
+                                            <button type="submit">
+                                                <a data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="img/core-img/cart.png" alt=""></a>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
