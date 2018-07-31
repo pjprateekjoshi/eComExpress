@@ -1,12 +1,10 @@
-var cook
-
 var Product = require("./../App/modules/Product.js");
 var Category = require("./../App/modules/Category.js");
 var TempUser = require("./../App/modules/TempUser.js");
 
-
 Product = Product.Product;
-
+//  Cookie Functions
+//  BEGIN
 const checkCookie = function (req,res){
     var readCookie = req.cookies;
     if(readCookie.temp === undefined){
@@ -16,119 +14,112 @@ const checkCookie = function (req,res){
     }
 }
 
-// const setTempCookie = function(req,res,function callback ()){
-//     newTempUser = new TempUser({reference: i});
-
-//     newTempUser.save(function(err,addedNewTempUser){
-//         if(err){
-//             console.log(err);
-//             res.render(err);
-//         }else{
-//             res.cookie('temp',{"reference":i++,"loggedIn":false, "user":addedNewTempUser._id});
-//         }
-//     });
-
-// }
-/*
-Create a function that set temp user cookie only if it is not set.
-cookie format: {
-    loggedIn : boolean,
-    user     : string, //(username if loggedIn is true, and random, unique for each browser if loggedIn is false)
-                        //temp-user table must be having an _id field which can be used as unique user cookie for each browser.
-                        //I must learn how to delete mongodb row(document) automatically after some definite time.
+const setTempCookie = function(req,res,Function){
+    if(!checkCookie(req,res)){
+        i = Math.random();
+        newTempUser = new TempUser({reference: i});
+        newTempUser.save(function(err,addedNewTempUser){
+            if(err){
+                console.log(err);
+                res.render(err);
+            }else{
+                res.cookie('temp',{"reference":i,"loggedIn":false, "user":addedNewTempUser._id});
+                Function();
+            }
+        });
+    }else{
+        Function();
+    }
 }
-*/
 
 
 const home = function(req,res){
-    Category.find({}, function(err,categories){
-        if(err){
-            console.log(err);
-            res.send("Error! Check log.");
-        }else{
-            if(!checkCookie(req,res)){
-                i = Math.random();
-                newTempUser = new TempUser({reference: i});
-                newTempUser.save(function(err,addedNewTempUser){
-                    if(err){
-                        console.log(err);
-                        res.render(err);
-                    }else{
-                        res.cookie('temp',{"reference":i,"loggedIn":false, "user":addedNewTempUser._id})
-                        res.render("./../resources/views/index.ejs",{categories:categories});
-                    }
-                });
-            }else{
-                res.render("./../resources/views/index.ejs",{categories:categories});
-            }
-        
-        }
-    });
+    setTempCookie(req,res,function(){
+            Category.find({}, function(err,categories){
+                if(err){
+                    console.log(err);
+                    res.send("Error! Check log.");
+                }else{
+                    res.render("./../resources/views/index.ejs",{categories:categories});
+                }
+            });
+        });
 }
 
 const checkout = function(req,res){
-    res.render("./../resources/views/checkout.ejs");
-}
-
-const cart = function(req,res){
-    res.render("./../resources/views/cart.ejs");
-}
-
-const productDetails = function(req,res){
-    var id = req.params.id;
-    Product.findOne({"id":id}, function(err,product){
-        if(err){
-            console.log(err);
-            res.send("Error! Check log.");
-        }else{
-            res.render("./../resources/views/product-details.ejs", {product:product});
-        }
+    setTempCookie(req,res,function(){
+        res.render("./../resources/views/checkout.ejs");
     });
 }
 
+const cart = function(req,res){
+    setTempCookie(req,res,function(){
+        res.render("./../resources/views/cart.ejs");
+    });
+}
+
+const productDetails = function(req,res){
+    
+    setTempCookie(req,res,function(){
+        var id = req.params.id;
+        Product.findOne({"id":id}, function(err,product){
+            if(err){
+                console.log(err);
+                res.send("Error! Check log.");
+            }else{
+                res.render("./../resources/views/product-details.ejs", {product:product});
+            }
+        });
+    });
+    }
+
 const shop = function(req,res){
-    var categoryID = req.params.category;
-    Category.find({}, function(err,categories){
-        if(err){
-            console.log(err);
-            res.send("Error! Check log.");
-        }else{
-            Category.findById(categoryID, function(err,category){
-                if(err){
-                    console.log(err);
-                    res.send(err);
-                }else{
-                    Product.find({"category":category.name}, function(err,products){
-                        if(err){
-                            console.log(err);
-                            res.send(err);
-                        }else{
-                            res.render("./../resources/views/shop.ejs", {products:products, categories:categories});
-                        }
-                    });
-                    
-                }
-            });
-        }
+    setTempCookie(req,res,function(){
+        var categoryID = req.params.category;
+        Category.find({}, function(err,categories){
+            if(err){
+                console.log(err);
+                res.send("Error! Check log.");
+            }else{
+                Category.findById(categoryID, function(err,category){
+                    if(err){
+                        console.log(err);
+                        res.send(err);
+                    }else{
+                        Product.find({"category":category.name}, function(err,products){
+                            if(err){
+                                console.log(err);
+                                res.send(err);
+                            }else{
+                                res.render("./../resources/views/shop.ejs", {products:products, categories:categories});
+                            }
+                        });
+                        
+                    }
+                });
+            }
+        });
     });
 }
 
 const cartAdd = function(req,res){
-    var productID = req.body.id;
-    var productQty = req.body.quantity;
-    Product.findOne({"id":id},function(err,product){
-        if(err){
-            console.log(err);
-        }else{
-            //  get username from cookies(set 2 types of cookies, logged in and logged out.)
-            //  (Logged out must have unique temp username corresponding to temp-user table.)
-            //  get cart _id findOne({_id},function(err,cart){  });
-            //  push product object to that cart
-            //  
-            //  make ejs display from the user's cart...
+    setTempCookie(req,res,function(){
+        var productID = req.body.id;
+        var productQty = req.body.quantity;
+        Product.findOne({"id":id},function(err,product){
+            if(err){
+                console.log(err);
+            }else{
+                //  get username from cookies(set 2 types of cookies, logged in and logged out.)
+                //  (Logged out must have unique temp username corresponding to temp-user table.)
+                //  get cart _id findOne({_id},function(err,cart){  });
+                //  push product object to that cart
+                //  
+                //  make ejs display from the user's cart...
 
-            res.render("./../resources/views/cart.ejs");
-        }
+                res.render("./../resources/views/cart.ejs");
+            }
+        });
     });
 }
 
