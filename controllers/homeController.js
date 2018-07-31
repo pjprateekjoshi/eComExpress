@@ -1,6 +1,7 @@
 var Product = require("./../App/modules/Product.js");
 var Category = require("./../App/modules/Category.js");
 var TempUser = require("./../App/modules/TempUser.js");
+var TempCart = require("./../App/modules/TempCart.js");
 
 Product = Product.Product;
 
@@ -19,7 +20,12 @@ const checkCookie = function (req,res){
 const setTempCookie = function(req,res,Function){
     if(!checkCookie(req,res)){
         i = Math.random();
-        newTempUser = new TempUser({reference: i});
+        newTempCart = new TempCart({});
+        newTempCart.save();
+        newTempUser = new TempUser({
+            reference: i,
+            cartID: newTempCart
+        });
         newTempUser.save(function(err,addedNewTempUser){
             if(err){
                 console.log(err);
@@ -96,19 +102,14 @@ const shop = function(req,res){
                 console.log(err);
                 res.send("Error! Check log.");
             }else{
-                Category.findById(categoryID, function(err,category){
+                Category.findById(categoryID).populate("productList")
+                .exec(function(err,category){
                     if(err){
                         console.log(err);
                         res.send(err);
                     }else{
-                        Product.find({"category":category.name}, function(err,products){
-                            if(err){
-                                console.log(err);
-                                res.send(err);
-                            }else{
-                                res.render("./../resources/views/shop.ejs", {products:products, categories:categories});
-                            }
-                        });
+                        console.log("\n..................\n",category,"\n..................\n");
+                        res.render("./../resources/views/shop.ejs", {category:category, categories:categories});
                     }
                 });
             }
@@ -174,6 +175,9 @@ const addProduct = function(req,res){
             Category.findOne({"name":req.body.category}, function(err,category){
 
             category.productList.push(addedProduct);
+            category.save(function(err,data){
+                console.log(data);
+            });
     });
 
         }

@@ -67,15 +67,14 @@
                 </div>
 
                 <div class="row">
-
-                    <%for(i=0;i<products.length;i++){%>
+                    <%for(i=0;i<category.productList.length;i++){%>
                     <!-- Single Product Area -->
                     <div class="col-12 col-sm-6 col-md-12 col-xl-6">
                         <div class="single-product-wrapper">
-                            <a href="/product-details/<%=products[i].id%>">
+                            <a href="/product-details/<%=category.productList[i].id%>">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="img/product-img/small/<%=products[i].image%>" alt="">
+                                <img src="img/product-img/small/<%=category.productList[i].image%>" alt="">
                             </div>
                             </a>
                             <!-- Product Description -->
@@ -83,9 +82,9 @@
                                 <!-- Product Meta Data -->
                                 <div class="product-meta-data">
                                     <div class="line"></div>
-                                    <p class="product-price">$<%=products[i].price%></p>
+                                    <p class="product-price">$<%=category.productList[i].price%></p>
                                     <a href="product-details">
-                                        <h6><%=products[i].name%></h6>
+                                        <h6><%=category.productList[i].name%></h6>
                                     </a>
                                 </div>
                                 <!-- Ratings & Cart -->
