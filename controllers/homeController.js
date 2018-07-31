@@ -16,7 +16,6 @@ const checkCookie = function (req,res){
     }
 }
 
-
 const setTempCookie = function(req,res,Function){
     if(!checkCookie(req,res)){
         i = Math.random();
