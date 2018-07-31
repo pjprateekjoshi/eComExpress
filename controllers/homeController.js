@@ -3,16 +3,19 @@ var Category = require("./../App/modules/Category.js");
 var TempUser = require("./../App/modules/TempUser.js");
 
 Product = Product.Product;
+
 //  Cookie Functions
 //  BEGIN
 const checkCookie = function (req,res){
     var readCookie = req.cookies;
     if(readCookie.temp === undefined){
+        console.log("I didn't know this user earlier. But I will remember next time.");
         return(false);
     }else{
         return(true);
     }
 }
+
 
 const setTempCookie = function(req,res,Function){
     if(!checkCookie(req,res)){
@@ -28,10 +31,24 @@ const setTempCookie = function(req,res,Function){
             }
         });
     }else{
-        Function();
+
+        var readCookie = req.cookies.temp;
+        TempUser.findOne({"_id": readCookie.user, "reference": readCookie.reference}, function(err,result){
+            if(err){console.log(err);}
+            if(result != null){
+                //true
+                console.log("I remember this user!");
+                Function();
+            }else{
+                //false
+                console.log("This user is a hacker!");
+                res.send("You tampered with your cookies! Clear cookies and reload.");
+            }
+        });
     }
 }
-
+//  Cookie Functions
+//  END
 
 const home = function(req,res){
     setTempCookie(req,res,function(){
@@ -59,7 +76,6 @@ const cart = function(req,res){
 }
 
 const productDetails = function(req,res){
-    
     setTempCookie(req,res,function(){
         var id = req.params.id;
         Product.findOne({"id":id}, function(err,product){
@@ -71,7 +87,7 @@ const productDetails = function(req,res){
             }
         });
     });
-    }
+}
 
 const shop = function(req,res){
     setTempCookie(req,res,function(){
@@ -153,7 +169,6 @@ const addProduct = function(req,res){
             console.log(err);
             res.send(err);
         }else{
-            console.log("Product added!");
             res.send("Product added!\n"+ addedProduct);
             
             Category.findOne({"name":req.body.category}, function(err,category){
