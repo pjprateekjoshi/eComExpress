@@ -10,7 +10,6 @@ Product = Product.Product;
 const checkCookie = function (req,res){
     var readCookie = req.cookies;
     if(readCookie.temp === undefined){
-        console.log("I didn't know this user earlier. But I will remember next time.");
         return(false);
     }else{
         return(true);
@@ -42,11 +41,9 @@ const setTempCookie = function(req,res,Function){
             if(err){console.log(err);}
             if(result != null){
                 //true
-                console.log("I remember this user!");
                 Function();
             }else{
                 //false
-                console.log("This user is a hacker!");
                 res.send("You tampered with your cookies! Clear cookies and reload.");
             }
         });
@@ -77,11 +74,8 @@ const checkout = function(req,res){
 const cart = function(req,res){
     setTempCookie(req,res,function(){
         var tempUserID = req.cookies.temp.user;
-        
-        
         TempUser.findById(tempUserID).populate("cartID")
         .exec(function(err,theTempUser){
-
             TempCart.findById(theTempUser.cartID._id).populate("tempCartContents")
             .exec(function(err,theTempCart){
                 res.render("./../resources/views/cart.ejs", {tempCartContents:theTempCart.tempCartContents});
@@ -136,7 +130,6 @@ const shop = function(req,res){
                 }
             });
         }else{
-            
             Category.find({}, function(err,categories){
                 if(err){
                     console.log(err);
@@ -160,7 +153,6 @@ const shop = function(req,res){
 const cartAdd = function(req,res){
     setTempCookie(req,res,function(){
         var productID = req.body.id;
-        console.log(req.body);
         // var productQty = req.body.quantity;
         var tempUserID = req.cookies.temp.user
         TempUser.findById(tempUserID).populate("cartID")
@@ -175,7 +167,6 @@ const cartAdd = function(req,res){
 const removeFromCart = function(req,res){
     setTempCookie(req,res,function(){
         var index = req.params.index;
-
         var tempUserID = req.cookies.temp.user
         TempUser.findById(tempUserID).populate("cartID")
         .exec(function(err,theTempUser){
@@ -224,10 +215,9 @@ const addProduct = function(req,res){
 
                 category.productList.push(addedProduct);
                 category.save(function(err,data){
-                    console.log(data);
+                    if(err) console.log(err);
                 });
             });
-
         }
     });
 }
@@ -249,7 +239,6 @@ const addProduct = function(req,res){
             image: req.body.image
         });
         newCategory.save(function(err, addedCategory){
-            console.log("Category added!");
             res.send("Category added!\n" + addedCategory);
         });
     }
