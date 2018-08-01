@@ -11,6 +11,7 @@
                         </div>
 
                         <div class="cart-table clearfix">
+                            <%var totalPrice = 0; if(tempCartContents.length>0){%>
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
@@ -21,7 +22,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <%var totalPrice = 0; for(i=0;i<tempCartContents.length;i++){%>
+                                    <%for(i=0;i<tempCartContents.length;i++){%>
                                     <tr>
                                         <td class="cart_product_img">
                                             <a href="#"><img src="img/bg-img/cart1.jpg" alt="Product"></a>
@@ -47,6 +48,9 @@
                                     <%totalPrice = totalPrice + tempCartContents[i].price}%>
                                 </tbody>
                             </table>
+                            <%}else{%>
+                                <div class="alert-danger text-center">No Items In Your Cart!</div>
+                            <%}%>
                         </div>
                     </div>
                     <div class="col-12 col-lg-4">
