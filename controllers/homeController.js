@@ -2,6 +2,7 @@ var Product = require("./../App/modules/Product.js");
 var Category = require("./../App/modules/Category.js");
 var TempUser = require("./../App/modules/TempUser.js");
 var TempCart = require("./../App/modules/TempCart.js");
+var Order = require("./../App/modules/Order.js");
 
 Product = Product.Product;
 
@@ -65,9 +66,21 @@ const home = function(req,res){
         });
 }
 
-const checkout = function(req,res){
+const checkOut = function(req,res){
     setTempCookie(req,res,function(){
-        res.render("./../resources/views/checkout.ejs");
+        var tempUserID = req.cookies.temp.user;
+        TempUser.findById(tempUserID).populate("cartID")
+        .exec(function(err,theTempUser){
+            TempCart.findById(theTempUser.cartID._id).populate("tempCartContents")
+            .exec(function(err,theTempCart){        
+        
+                var total = 0;
+                for(i=0;i<theTempCart.tempCartContents.length;i++){
+                    total = total + theTempCart.tempCartContents[i].price;
+                }
+                res.render("./../resources/views/checkout.ejs",{total:total});
+            });
+        });
     });
 }
 
@@ -177,6 +190,49 @@ const removeFromCart = function(req,res){
     });
 }
 
+const order = function(req,res){
+    setTempCookie(req,res,function(){
+        var tempUserID = req.cookies.temp.user;
+        TempUser.findById(tempUserID).populate("cartID")
+        .exec(function(err,theTempUser){
+            TempCart.findById(theTempUser.cartID._id).populate("tempCartContents")
+            .exec(function(err,theTempCart){
+                var total = 0;
+                for(i=0;i<theTempCart.tempCartContents.length;i++){
+                    total = total + theTempCart.tempCartContents[i].price;
+                }
+                var newOrder = new Order({
+                    username: tempUserID,
+                    status: "Placed",
+                    orderContents: theTempCart.tempCartContents,
+                    name: req.body.name,
+                    address: req.body.address,
+                    contactNumber: req.body.contactnumber,
+                    email: req.body.email,
+                    comment: req.body.comment,
+                    total: req.body.total
+                });
+                newOrder.save();
+                theTempCart.tempCartContents = [];
+                theTempCart.save();
+                res.send("Success!");
+            });
+        });
+    });
+}
+
+
+/* ========================
+        ADMIN ORDERS VIEW
+========================= */
+
+
+const allOrders = function(req,res){
+    Order.find({},function(err,orders){
+        res.render("./../resources/views/shop.ejs",{orders:orders});
+    });
+}
+
 /* ========================
         ADD PRODUCT BEGIN
 ========================= */
@@ -247,7 +303,7 @@ const addProduct = function(req,res){
 
 module.exports = {
     home,
-    checkout,
+    checkOut,
     cart,
     productDetails,
     shop,
@@ -256,5 +312,6 @@ module.exports = {
     addCategoryForm,
     addCategory,
     cartAdd,
-    removeFromCart
+    removeFromCart,
+    order
 }

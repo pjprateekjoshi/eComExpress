@@ -6,12 +6,15 @@ var orderSchema = new mongoose.Schema({
    username : String,
    status: String,
    orderContents: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product"
-}],
-    email: String,
+       type: mongoose.Schema.Types.ObjectId,
+       ref: "Product"
+    }],
+    name: String,
     address: String,
-    comment: String
+    email: String,
+    contactNumber: String,
+    comment: String,
+    total: Number
 });
 
 var Order = mongoose.model("Order", orderSchema);
