@@ -13,6 +13,10 @@ router.get('/shop/:category', (req,res)=>{homeController.shop(req,res);});
 router.get('/removeFromCart/:index', (req,res)=>{homeController.removeFromCart(req,res)});
 router.post('/order', (req,res)=>{homeController.order(req,res);});
 
+
+
+router.get('/orders', (req,res)=>{homeController.allOrders(req,res);});
+router.get('/orders/:id', (req,res)=>{homeController.orderAdmin(req,res);});
 //
 router.get('/add-product', (req,res)=>{homeController.addProductForm(req,res);});
 router.post('/add-product', (req,res)=>{homeController.addProduct(req,res);});

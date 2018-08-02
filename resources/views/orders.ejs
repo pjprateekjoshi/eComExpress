@@ -1,0 +1,39 @@
+<head>
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <!-- Core Style CSS -->
+        <link rel="stylesheet" href="css/core-style.css">
+    <style>
+        td{
+            padding: 1em;
+            border: 2px solid black;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="jumbotron">
+        <table style="text-align: center; border-collapse: collapse">
+            <tr>
+                <td>S.No.</td>
+                <td>Status</td>
+                <td>No. Of Products</td>
+                <td>Name</td>
+                <td>Order Total</td>
+            </tr>
+            <%for(i=0;i<orders.length;i++){%>
+            <tr>
+                <td><%=i+1%>.</td>
+                <td><%=orders[i].status%></td>
+                <td><%=orders[i].orderContents.length%></td>
+                <td><%=orders[i].name%></td>
+                <td><%=orders[i].total%></td>
+                <td><a class="text-success" href="/orders/<%=orders[i].id%>">View</a></td>
+            </tr>
+            <%}%>
+        </table>
+    </div>
+</body>

@@ -229,8 +229,20 @@ const order = function(req,res){
 
 const allOrders = function(req,res){
     Order.find({},function(err,orders){
-        res.render("./../resources/views/shop.ejs",{orders:orders});
+        res.render("./../resources/views/orders.ejs",{orders:orders});
     });
+}
+
+const orderAdmin = function(req,res){
+    Order.findById(req.params.id).populate("orderContents")
+    .exec(function(err,order){
+        if (err){
+            console.log(err);
+        }else{
+            console.log(order);
+            res.render("./../resources/views/single-order.ejs",{order:order})
+        }
+    })
 }
 
 /* ========================
@@ -313,5 +325,7 @@ module.exports = {
     addCategory,
     cartAdd,
     removeFromCart,
-    order
+    order,
+    allOrders,
+    orderAdmin
 }
