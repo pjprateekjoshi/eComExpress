@@ -242,7 +242,7 @@ const orderAdmin = function(req,res){
             console.log(order);
             res.render("./../resources/views/single-order.ejs",{order:order})
         }
-    })
+    });
 }
 
 /* ========================
@@ -277,9 +277,7 @@ const addProduct = function(req,res){
             res.send(err);
         }else{
             res.send("Product added!\n"+ addedProduct);
-
             Category.findOne({"name":req.body.category}, function(err,category){
-
                 category.productList.push(addedProduct);
                 category.save(function(err,data){
                     if(err) console.log(err);
