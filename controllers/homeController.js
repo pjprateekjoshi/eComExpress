@@ -223,9 +223,86 @@ const order = function(req,res){
 
 
 /* ========================
-        ADMIN ORDERS VIEW
+    A
+        D
+            M
+                I
+                    N
 ========================= */
 
+//Start admin cookie functions
+
+const checkAdminCookie = function(req,res){
+    var readCookie = req.cookies;
+    if(readCookie.admin === undefined){
+        return(false);
+    }else{
+        return(true);
+    }
+}
+
+const verifyAdmin = function(req,res){
+    if(checkAdminCookie(req,res)){
+        var readCookie = req.cookies.admin;
+        Reference.findOne({"user": readCookie.user, "reference": readCookie.reference}, function(err,result){
+            if(err){console.log(err);}
+            if(result != null){
+                //true
+                Function();
+            }else{
+                //false
+                res.redirect("/admin/login");
+            }
+        });
+    }else{
+        res.redirect("/admin/login");
+    }
+}
+
+//End admin cookie functions
+
+const adminLoginForm = function(req,res){
+    if(!checkAdminCookie(req,res)){
+        res.render("./../resources/views/login.ejs");
+    }else{
+        res.redirect("/admin");
+    }
+}
+
+const adminLogin = function(req,res){
+
+    i = Math.random();
+    newReference = new Reference({
+        reference: i,
+        adminID: req.body.username
+    });
+    newReference.save(function(err,addedReference){
+        if(err){
+            console.log(err);
+            res.render(err);
+        }else{
+            res.cookie('admin',{"reference":i, "admin":req.body.admin});
+            Function();
+        }
+    });
+
+}
+
+const admin = function(req,res){
+    if(!checkAdminCookie(req,res)){
+        res.redirect("/admin/login");
+    }else{
+        verifyAdmin(req,res,function(){
+            res.render("./../resources/views/dashboard.ejs");
+        });
+    }
+}
+
+//STILL NEED TO CHECK
+//
+//AND AUTHENTICATE
+//
+//THE FOLLOWING CODE!!!
 
 const allOrders = function(req,res){
     Order.find({},function(err,orders){
