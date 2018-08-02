@@ -203,7 +203,6 @@ const addProduct = function(req,res){
         brand: req.body.brand,
         availableQuantity: req.body.availableQuantity
     });
-
     newProduct.save((err,addedProduct)=>{
         if(err){
             console.log(err);
