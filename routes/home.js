@@ -14,9 +14,11 @@ router.get('/removeFromCart/:index', (req,res)=>{homeController.removeFromCart(r
 router.post('/order', (req,res)=>{homeController.order(req,res);});
 
 
-
+router.get('/admin', (req,res)=>{homeController.admin(req,res);});
 router.get('/admin/login', (req,res)=>{homeController.adminLoginForm(req,res);});
-router.post('/admin/dashboard', (req,res)=>{homeController.allOrders(req,res);});
+router.post('/admin/login', (req,res)=>{homeController.adminLogin(req,res);});
+
+router.get('/admin/dashboard', (req,res)=>{homeController.admin(req,res);});
 
 router.get('/admin/orders', (req,res)=>{homeController.allOrders(req,res);});
 router.get('/admin/orders/:id', (req,res)=>{homeController.orderAdmin(req,res);});

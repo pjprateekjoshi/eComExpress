@@ -4,6 +4,7 @@ var TempUser = require("./../App/modules/TempUser.js");
 var TempCart = require("./../App/modules/TempCart.js");
 var Order = require("./../App/modules/Order.js");
 var Reference = require("./../App/modules/Reference.js");
+var Admin = require("./../App/modules/Admin.js");
 
 Product = Product.Product;
 
@@ -242,7 +243,7 @@ const checkAdminCookie = function(req,res){
     }
 }
 
-const verifyAdmin = function(req,res){
+const verifyAdmin = function(req,res,Function){
     if(checkAdminCookie(req,res)){
         var readCookie = req.cookies.admin;
         Reference.findOne({"user": readCookie.user, "reference": readCookie.reference}, function(err,result){
@@ -270,20 +271,38 @@ const adminLoginForm = function(req,res){
     }
 }
 
-const adminLogin = function(req,res){
-    i = Math.random();
-    newReference = new Reference({
-        reference: i,
-        adminID: req.body.username
-    });
-    newReference.save(function(err,addedReference){
+const authenticateAdmin = function(req,res,callback){
+    console.log(req.body);
+    Admin.findOne({"username":req.body.admin, "password":req.body.password}, function(err,admin){
         if(err){
             console.log(err);
-            res.render(err);
         }else{
-            res.cookie('admin',{"reference":i, "admin":req.body.admin});
-            Function();
+            if(admin == null){
+                res.redirect("/admin/login");
+            }else{
+                console.log(admin);
+                callback(req,res);
+            }
         }
+    });
+}
+
+const adminLogin = function(req,res){
+    authenticateAdmin(req,res,function(req,res){
+        i = Math.random();
+        newReference = new Reference({
+            reference: i,
+            adminID: req.body.admin
+        });
+        newReference.save(function(err,addedReference){
+            if(err){
+                console.log(err);
+                res.render(err);
+            }else{
+                res.cookie('admin',{"reference":i, "admin":req.body.admin});
+                res.redirect("/admin/dashboard");
+            }
+        });
     });
 }
 
@@ -408,5 +427,7 @@ module.exports = {
     order,
     allOrders,
     orderAdmin,
-    adminLoginForm
+    adminLoginForm,
+    adminLogin,
+    admin
 }
