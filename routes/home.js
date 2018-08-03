@@ -17,6 +17,7 @@ router.post('/order', (req,res)=>{homeController.order(req,res);});
 router.get('/admin', (req,res)=>{homeController.admin(req,res);});
 router.get('/admin/login', (req,res)=>{homeController.adminLoginForm(req,res);});
 router.post('/admin/login', (req,res)=>{homeController.adminLogin(req,res);});
+router.get('/admin/logout', (req,res)=>{homeController.logout(req,res);});
 
 router.get('/admin/dashboard', (req,res)=>{homeController.admin(req,res);});
 

@@ -272,7 +272,6 @@ const adminLoginForm = function(req,res){
 }
 
 const authenticateAdmin = function(req,res,callback){
-    console.log(req.body);
     Admin.findOne({"username":req.body.admin, "password":req.body.password}, function(err,admin){
         if(err){
             console.log(err);
@@ -314,6 +313,11 @@ const admin = function(req,res){
             res.render("./../resources/views/dashboard.ejs");
         });
     }
+}
+
+const logout = function(req,res){
+    res.clearCookie("admin");
+    res.redirect("/admin");
 }
 
 const allOrders = function(req,res){
@@ -429,5 +433,6 @@ module.exports = {
     orderAdmin,
     adminLoginForm,
     adminLogin,
-    admin
+    admin,
+    logout
 }
