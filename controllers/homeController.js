@@ -279,7 +279,6 @@ const authenticateAdmin = function(req,res,callback){
             if(admin == null){
                 res.redirect("/admin/login");
             }else{
-                console.log(admin);
                 callback(req,res);
             }
         }
@@ -335,7 +334,6 @@ const orderAdmin = function(req,res){
             if (err){
                 console.log(err);
             }else{
-                console.log(order);
                 res.render("./../resources/views/single-order.ejs",{order:order})
             }
         });
