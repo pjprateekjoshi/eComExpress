@@ -1,8 +1,7 @@
 var mongoose = require ("mongoose");
 mongoose.connect("mongodb://localhost:27017/ecom-test", {useNewUrlParser:true});
-var Admin = require ("./Admin.js");
 
-var tempUserSchema = new mongoose.Schema({
+var referenceSchema = new mongoose.Schema({
     reference: Number,
     adminID: {
         type: mongoose.Schema.Types.ObjectId,
@@ -10,6 +9,6 @@ var tempUserSchema = new mongoose.Schema({
     }
 });
 
-var TempUser = mongoose.model("TempUser", tempUserSchema);
+var Reference = mongoose.model("Reference", referenceSchema);
 
-module.exports = TempUser;
+module.exports = Reference;

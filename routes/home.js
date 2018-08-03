@@ -15,13 +15,16 @@ router.post('/order', (req,res)=>{homeController.order(req,res);});
 
 
 
-router.get('/orders', (req,res)=>{homeController.allOrders(req,res);});
-router.get('/orders/:id', (req,res)=>{homeController.orderAdmin(req,res);});
+router.get('/admin/login', (req,res)=>{homeController.adminLoginForm(req,res);});
+router.post('/admin/dashboard', (req,res)=>{homeController.allOrders(req,res);});
+
+router.get('/admin/orders', (req,res)=>{homeController.allOrders(req,res);});
+router.get('/admin/orders/:id', (req,res)=>{homeController.orderAdmin(req,res);});
 //
-router.get('/add-product', (req,res)=>{homeController.addProductForm(req,res);});
-router.post('/add-product', (req,res)=>{homeController.addProduct(req,res);});
-router.get('/add-category', (req,res)=>{homeController.addCategoryForm(req,res);});
-router.post('/add-category', (req,res)=>{homeController.addCategory(req,res);});
+router.get('/admin/add-product', (req,res)=>{homeController.addProductForm(req,res);});
+router.post('/admin/add-product', (req,res)=>{homeController.addProduct(req,res);});
+router.get('/admin/add-category', (req,res)=>{homeController.addCategoryForm(req,res);});
+router.post('/admin/add-category', (req,res)=>{homeController.addCategory(req,res);});
 //
 
 module.exports = router;

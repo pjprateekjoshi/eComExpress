@@ -3,6 +3,7 @@ var Category = require("./../App/modules/Category.js");
 var TempUser = require("./../App/modules/TempUser.js");
 var TempCart = require("./../App/modules/TempCart.js");
 var Order = require("./../App/modules/Order.js");
+var Reference = require("./../App/modules/Reference.js");
 
 Product = Product.Product;
 
@@ -270,7 +271,6 @@ const adminLoginForm = function(req,res){
 }
 
 const adminLogin = function(req,res){
-
     i = Math.random();
     newReference = new Reference({
         reference: i,
@@ -285,7 +285,6 @@ const adminLogin = function(req,res){
             Function();
         }
     });
-
 }
 
 const admin = function(req,res){
@@ -298,27 +297,25 @@ const admin = function(req,res){
     }
 }
 
-//STILL NEED TO CHECK
-//
-//AND AUTHENTICATE
-//
-//THE FOLLOWING CODE!!!
-
 const allOrders = function(req,res){
-    Order.find({},function(err,orders){
-        res.render("./../resources/views/orders.ejs",{orders:orders});
+    verifyAdmin(req,res, function(){
+        Order.find({},function(err,orders){
+            res.render("./../resources/views/orders.ejs",{orders:orders});
+        });
     });
 }
 
 const orderAdmin = function(req,res){
-    Order.findById(req.params.id).populate("orderContents")
-    .exec(function(err,order){
-        if (err){
-            console.log(err);
-        }else{
-            console.log(order);
-            res.render("./../resources/views/single-order.ejs",{order:order})
-        }
+    verifyAdmin(req,res,function(){    
+        Order.findById(req.params.id).populate("orderContents")
+        .exec(function(err,order){
+            if (err){
+                console.log(err);
+            }else{
+                console.log(order);
+                res.render("./../resources/views/single-order.ejs",{order:order})
+            }
+        });
     });
 }
 
@@ -327,40 +324,44 @@ const orderAdmin = function(req,res){
 ========================= */
 
 const addProductForm = function(req,res){
-    Category.find({}, function(err,categories){
-        res.render("./../resources/views/add-product.ejs", {categories:categories});
+    verifyAdmin(req,res,function(){
+        Category.find({}, function(err,categories){
+            res.render("./../resources/views/add-product.ejs", {categories:categories});
+        });
     });
 }
 
 const addProduct = function(req,res){
-    var newProduct = new Product({
-        id: req.body.id,
-        name: req.body.name,
-        shortDesc: req.body.shortDesc,
-        longDesc: req.body.longDesc,
-        image: req.body.image,
-        imageLarge1: req.body.imagelarge1,
-        imageLarge2: req.body.imagelarge2,
-        imageLarge3: req.body.imagelarge3,
-        imageLarge4: req.body.imagelarge4,
-        category: req.body.category,
-        price: req.body.price,
-        brand: req.body.brand,
-        availableQuantity: req.body.availableQuantity
-    });
-    newProduct.save((err,addedProduct)=>{
-        if(err){
-            console.log(err);
-            res.send(err);
-        }else{
-            res.send("Product added!\n"+ addedProduct);
-            Category.findOne({"name":req.body.category}, function(err,category){
-                category.productList.push(addedProduct);
-                category.save(function(err,data){
-                    if(err) console.log(err);
+    verifyAdmin(req,res,function(){
+        var newProduct = new Product({
+            id: req.body.id,
+            name: req.body.name,
+            shortDesc: req.body.shortDesc,
+            longDesc: req.body.longDesc,
+            image: req.body.image,
+            imageLarge1: req.body.imagelarge1,
+            imageLarge2: req.body.imagelarge2,
+            imageLarge3: req.body.imagelarge3,
+            imageLarge4: req.body.imagelarge4,
+            category: req.body.category,
+            price: req.body.price,
+            brand: req.body.brand,
+            availableQuantity: req.body.availableQuantity
+        });
+        newProduct.save((err,addedProduct)=>{
+            if(err){
+                console.log(err);
+                res.send(err);
+            }else{
+                res.send("Product added!\n"+ addedProduct);
+                Category.findOne({"name":req.body.category}, function(err,category){
+                    category.productList.push(addedProduct);
+                    category.save(function(err,data){
+                        if(err) console.log(err);
+                    });
                 });
-            });
-        }
+            }
+        });
     });
 }
 
@@ -371,11 +372,14 @@ const addProduct = function(req,res){
 /* ========================
         ADD CATEGORY START
 ========================= */
-    const addCategoryForm = function(req,res){
+const addCategoryForm = function(req,res){ 
+    verifyAdmin(req,res,function(){
         res.render("./../resources/views/add-category.ejs");
-    }
+    });
+}
 
-    const addCategory = function(req,res){
+const addCategory = function(req,res){
+    verifyAdmin(req,res,function(){
         var newCategory = new Category({
             name: req.body.name,
             image: req.body.image
@@ -383,7 +387,8 @@ const addProduct = function(req,res){
         newCategory.save(function(err, addedCategory){
             res.send("Category added!\n" + addedCategory);
         });
-    }
+    });
+}
 /* ========================
         ADD CATEGORY END
 ========================= */
@@ -402,5 +407,6 @@ module.exports = {
     removeFromCart,
     order,
     allOrders,
-    orderAdmin
+    orderAdmin,
+    adminLoginForm
 }
