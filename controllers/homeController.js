@@ -11,6 +11,7 @@ Product = Product.Product;
 //  Cookie Functions
 //  BEGIN
 const checkCookie = function (req,res){
+    res.clearCookie("admin");
     var readCookie = req.cookies;
     if(readCookie.temp === undefined){
         return(false);
